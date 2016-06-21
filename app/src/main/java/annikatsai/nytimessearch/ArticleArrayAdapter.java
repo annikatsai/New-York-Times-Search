@@ -35,7 +35,7 @@ public class ArticleArrayAdapter extends ArrayAdapter<Article> {
         // find the image view
         ImageView imageView = (ImageView) convertView.findViewById(R.id.ivImage);
 
-        // clear out recycled image from convertview from last time
+        // clear out recycled image from convertView from last time
         imageView.setImageResource(0);
 
         TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
@@ -46,6 +46,8 @@ public class ArticleArrayAdapter extends ArrayAdapter<Article> {
         String thumbnail = article.getThumbNail();
         if(!TextUtils.isEmpty(thumbnail)) {
             Picasso.with(getContext()).load(thumbnail).into(imageView);
+        } else {
+            Picasso.with(getContext()).load(R.drawable.ic_newspaper).into(imageView);
         }
 
         return convertView;
