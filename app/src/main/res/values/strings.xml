@@ -5,9 +5,14 @@
     <string name="search">Search</string>
     <string name="title_activity_article">ArticleActivity</string>
     <string name="date">Select Date</string>
-    <string name="sortOrder">Sort Order</string>
-    <string name="newsDeskValues">News Desk Values</string>
+    <string name="sortOrder">Sort Order:</string>
+    <string name="newsDeskValues">News Desk Values:</string>
     <string name="arts">Arts</string>
     <string name="fashionAndStyle"><![CDATA[Fashion & Style]]></string>
     <string name="sports">Sports</string>
+    <string name="beginDate">Begin Date:</string>
+    <string name="submit">Submit</string>
+    <string name="selectDate">Select Date:</string>
+    <string name="dateHint">mm/dd/yy</string>
+    <string name="sortOrder_prompt">Select...</string>
 </resources>

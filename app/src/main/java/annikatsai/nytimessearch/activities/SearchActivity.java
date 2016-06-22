@@ -33,6 +33,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private final int REQUEST_CODE = 50;
     //EditText etQuery;
     GridView gvResults;
     //Button btnSearch;
@@ -197,4 +198,16 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    public void launchFilterView(MenuItem item) {
+        Intent i = new Intent(SearchActivity.this, FilterActivity.class);
+        i.putExtra("date", "2016-01-01");
+        startActivity(i);
+    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 }

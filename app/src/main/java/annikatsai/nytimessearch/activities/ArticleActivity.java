@@ -39,7 +39,7 @@ public class ArticleActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_search, menu);
+        inflater.inflate(R.menu.menu_article, menu);
 
         MenuItem item = menu.findItem(R.id.menu_item_share);
         ShareActionProvider miShare = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
