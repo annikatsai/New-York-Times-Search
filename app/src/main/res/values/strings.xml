@@ -4,4 +4,10 @@
     <string name="hint">Enter search query</string>
     <string name="search">Search</string>
     <string name="title_activity_article">ArticleActivity</string>
+    <string name="date">Select Date</string>
+    <string name="sortOrder">Sort Order</string>
+    <string name="newsDeskValues">News Desk Values</string>
+    <string name="arts">Arts</string>
+    <string name="fashionAndStyle"><![CDATA[Fashion & Style]]></string>
+    <string name="sports">Sports</string>
 </resources>

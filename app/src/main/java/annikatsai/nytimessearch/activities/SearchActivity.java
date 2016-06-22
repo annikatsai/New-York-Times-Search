@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -11,11 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -35,10 +33,9 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
-//    int pageNum = 0;
-    EditText etQuery;
+    //EditText etQuery;
     GridView gvResults;
-    Button btnSearch;
+    //Button btnSearch;
     ArrayList<Article> articles;
     ArticleArrayAdapter adapter;
     String searchQuery;
@@ -200,6 +197,4 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }
