@@ -7,7 +7,8 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Article implements Serializable{
+
+public class Article implements Serializable {
 
     public String getWebUrl() {
         return webUrl;
@@ -24,6 +25,7 @@ public class Article implements Serializable{
     String webUrl;
     String headline;
     String thumbNail;
+
 
     public Article(JSONObject jsonObject) {
         try {
@@ -53,5 +55,4 @@ public class Article implements Serializable{
         }
         return results;
     }
-
 }

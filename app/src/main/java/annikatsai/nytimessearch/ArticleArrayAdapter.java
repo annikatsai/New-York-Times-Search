@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -45,11 +45,11 @@ public class ArticleArrayAdapter extends ArrayAdapter<Article> {
         // remote download the image in the background
         String thumbnail = article.getThumbNail();
         if(!TextUtils.isEmpty(thumbnail)) {
-            Picasso.with(getContext()).load(thumbnail).into(imageView);
+            Glide.with(getContext()).load(thumbnail).into(imageView);
         } else {
-            Picasso.with(getContext()).load(R.drawable.ic_newspaper).into(imageView);
-        }
+            Glide.with(getContext()).load(R.drawable.ic_newspaper).into(imageView);
 
+        }
         return convertView;
     }
 }

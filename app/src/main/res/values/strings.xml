@@ -12,7 +12,12 @@
     <string name="sports">Sports</string>
     <string name="beginDate">Begin Date:</string>
     <string name="submit">Submit</string>
-    <string name="selectDate">Select Date:</string>
+    <string name="selectDate">Begin Date:</string>
     <string name="dateHint">mm/dd/yy</string>
     <string name="sortOrder_prompt">Select...</string>
+    <string-array name="sortOrder_array">
+        <item>Newest</item>
+        <item>Oldest</item>
+    </string-array>
+    <string name="calligraphy">fonts/Kingthings_Calligraphica_2.ttf</string>
 </resources>

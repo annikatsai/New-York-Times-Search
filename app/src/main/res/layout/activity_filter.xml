@@ -9,45 +9,47 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="annikatsai.nytimessearch.activities.FilterActivity">
 
-    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:orientation="vertical"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignTop="@+id/textView3"-->
-        <!--android:layout_toRightOf="@+id/textView3"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:id="@+id/linearLayout">-->
-        <!--<CheckBox-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/arts"-->
-            <!--android:id="@+id/cbArts"-->
-            <!--android:layout_alignTop="@+id/textView3"-->
-            <!--android:layout_toRightOf="@+id/textView3"-->
-            <!--android:layout_toEndOf="@+id/textView3"-->
-            <!--android:checked="false" />-->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_alignRight="@+id/tvDate"
+        android:layout_alignEnd="@+id/tvDate">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/arts"
+            android:id="@+id/cbArts"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_toRightOf="@+id/textView3"
+            android:layout_toEndOf="@+id/textView3"
+            android:checked="false"
+            android:onClick="onCheckboxClicked"/>
 
-        <!--<CheckBox-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/fashionAndStyle"-->
-            <!--android:id="@+id/cbFashion"-->
-            <!--android:layout_below="@+id/cbArts"-->
-            <!--android:layout_alignLeft="@+id/cbArts"-->
-            <!--android:layout_alignStart="@+id/cbArts"-->
-            <!--android:checked="false" />-->
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fashionAndStyle"
+            android:id="@+id/cbFashion"
+            android:layout_below="@+id/cbArts"
+            android:layout_alignLeft="@+id/cbArts"
+            android:layout_alignStart="@+id/cbArts"
+            android:checked="false"
+            android:onClick="onCheckboxClicked"/>
 
-        <!--<CheckBox-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/sports"-->
-            <!--android:id="@+id/cbSports"-->
-            <!--android:layout_below="@+id/cbFashion"-->
-            <!--android:layout_alignLeft="@+id/cbFashion"-->
-            <!--android:layout_alignStart="@+id/cbFashion"-->
-            <!--android:checked="false" />-->
-    <!--</LinearLayout>-->
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sports"
+            android:id="@+id/cbSports"
+            android:layout_below="@+id/cbFashion"
+            android:layout_alignLeft="@+id/cbFashion"
+            android:layout_alignStart="@+id/cbFashion"
+            android:checked="false"
+            android:onClick="onCheckboxClicked"/>
+    </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
@@ -79,7 +81,8 @@
         android:layout_below="@+id/button2"
         android:layout_alignLeft="@+id/button2"
         android:layout_alignStart="@+id/button2"
-        android:layout_marginTop="59dp" />
+        android:layout_marginTop="59dp"
+        android:textColor="#000000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -92,7 +95,8 @@
         android:layout_alignStart="@+id/textView"
         android:layout_marginTop="59dp"
         android:layout_alignRight="@+id/textView"
-        android:layout_alignEnd="@+id/textView" />
+        android:layout_alignEnd="@+id/textView"
+        android:textColor="#000000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -102,21 +106,19 @@
         android:hint="@string/dateHint"
         android:layout_marginLeft="46dp"
         android:layout_marginStart="46dp"
+        android:textColor="#000000"
         android:layout_alignBottom="@+id/button2"
         android:layout_alignLeft="@+id/button"
         android:layout_alignStart="@+id/button" />
 
-    <!--<Spinner-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/spinner"-->
-        <!--android:entries="@array/sortOrder_array"-->
-        <!--android:prompt="@string/sortOrder_prompt"-->
-        <!--android:layout_alignTop="@+id/textView"-->
-        <!--android:layout_alignLeft="@+id/button"-->
-        <!--android:layout_alignStart="@+id/button"-->
-        <!--android:layout_alignRight="@+id/tvDate"-->
-        <!--android:layout_alignEnd="@+id/tvDate" />-->
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_alignTop="@+id/textView"
+        android:layout_toRightOf="@+id/button2"
+        android:layout_alignRight="@+id/linearLayout"
+        android:layout_alignEnd="@+id/linearLayout" />
 
 
 </RelativeLayout>

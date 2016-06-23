@@ -22,6 +22,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ import annikatsai.nytimessearch.Article;
 import annikatsai.nytimessearch.ArticleArrayAdapter;
 import annikatsai.nytimessearch.EndlessScrollListener;
 import annikatsai.nytimessearch.R;
+import annikatsai.nytimessearch.SearchFilters;
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
@@ -40,6 +42,9 @@ public class SearchActivity extends AppCompatActivity {
     ArrayList<Article> articles;
     ArticleArrayAdapter adapter;
     String searchQuery;
+    String beginDate = "", sortFilter = "", newsDesk = "";
+    SearchFilters searchFilters;
+    Boolean filterUsed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,38 @@ public class SearchActivity extends AppCompatActivity {
         setUpViews();
 
         GridView lvItems = (GridView) findViewById(R.id.gvResults);
+
+        // Displaying Current Top Stories Before Search
+//        AsyncHttpClient client = new AsyncHttpClient();
+//        String url = "https://api.nytimes.com/svc/topstories/v2/home.json";
+//
+//        RequestParams params = new RequestParams();
+//        params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
+//        params.put("page", 0);
+//
+//        client.get(url, params, new JsonHttpResponseHandler() {
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+//                super.onFailure(statusCode, headers, throwable, errorResponse);
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                Log.d("Debug", response.toString());
+//                JSONArray articleJsonResults = null;
+//
+//                try {
+//                    articleJsonResults = response.getJSONArray("results");
+//                    adapter.clear();
+//                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
+//                    adapter.notifyDataSetChanged();
+//                    Log.d("Debug", articles.toString());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
         // Attach the listener to the AdapterView onCreate
         lvItems.setOnScrollListener(new EndlessScrollListener() {
             @Override
@@ -79,7 +116,7 @@ public class SearchActivity extends AppCompatActivity {
         params.put("page", offset);
         params.put("q", searchQuery);
 
-        client.get(url,params, new JsonHttpResponseHandler() {
+        client.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("Debug", response.toString());
@@ -103,6 +140,7 @@ public class SearchActivity extends AppCompatActivity {
         articles = new ArrayList<>();
         adapter = new ArticleArrayAdapter(this, articles);
         gvResults.setAdapter(adapter);
+        searchFilters = new SearchFilters(beginDate, sortFilter, newsDesk);
 
         // hook up listener for grid click
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -168,25 +206,36 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void onArticleSearch(String query) {
-    //    String query = etQuery.getText().toString();
+    // String query = etQuery.getText().toString();
 
-    //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
+    // Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
 
         RequestParams params = new RequestParams();
         params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
         params.put("page", 0);
+        if (filterUsed == true) {
+            params.put("fq", String.format("news_desk:(%s)", searchFilters.getNews_desk()));
+            params.put("begin_date", searchFilters.getBegin_date());
+            params.put("sort", searchFilters.getSort());
+        }
         params.put("q", query);
 
+
         client.get(url,params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("Debug", response.toString());
                 JSONArray articleJsonResults = null;
 
                 try {
-
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
                     adapter.clear();
                     adapter.addAll(Article.fromJsonArray(articleJsonResults));
@@ -196,18 +245,57 @@ public class SearchActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
+
         });
     }
 
-
     public void launchFilterView(MenuItem item) {
         Intent i = new Intent(SearchActivity.this, FilterActivity.class);
-        i.putExtra("date", "2016-01-01");
-        startActivity(i);
+        i.putExtra("filter", Parcels.wrap(searchFilters));
+        filterUsed = true;
+        startActivityForResult(i, REQUEST_CODE);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            searchFilters = Parcels.unwrap(data.getParcelableExtra("filter"));
+//            searchFilters = (SearchFilters) data.getSerializableExtra("filter");
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+
+            RequestParams params = new RequestParams();
+            params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
+            params.put("page", 0);
+            params.put("fq", String.format("news_desk:(%s)", searchFilters.getNews_desk()));
+            params.put("begin_date", searchFilters.getBegin_date());
+            params.put("sort", searchFilters.getSort());
+
+            client.get(url, params, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Log.d("Debug", response.toString());
+                    JSONArray articleJsonResults = null;
+
+                    try {
+                        articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+                        adapter.clear();
+                        adapter.addAll(Article.fromJsonArray(articleJsonResults));
+                        adapter.notifyDataSetChanged();
+                        Log.d("Debug", articles.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
 }
