@@ -5,6 +5,7 @@
     <string name="hint">Enter search query</string>
     <string name="search">Search</string>
     <string name="title_activity_article">ArticleActivity</string>
+    <string name="title_activity_filter">FilterActivity</string>
     <string name="date">Select Date</string>
     <string name="sortOrder">Sort Order:</string>
     <string name="newsDeskValues">News Desk Values:</string>

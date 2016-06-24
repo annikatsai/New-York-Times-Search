@@ -5,15 +5,16 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -29,8 +30,10 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import annikatsai.nytimessearch.Article;
+import annikatsai.nytimessearch.ArticleAdapter;
 import annikatsai.nytimessearch.ArticleArrayAdapter;
 import annikatsai.nytimessearch.EndlessScrollListener;
+import annikatsai.nytimessearch.ItemClickSupport;
 import annikatsai.nytimessearch.R;
 import annikatsai.nytimessearch.SearchFilters;
 import butterknife.BindView;
@@ -45,6 +48,7 @@ public class SearchActivity extends AppCompatActivity {
     //Button btnSearch;
     ArrayList<Article> articles;
     ArticleArrayAdapter adapter;
+    ArticleAdapter rvAdapter;
     String searchQuery;
     String beginDate = "", sortFilter = "", newsDesk = "";
     SearchFilters searchFilters;
@@ -53,6 +57,7 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.gvResults) GridView gvResults;
     @BindView(R.id.custom_font) TextView toolbarTitle;
+    @BindView(R.id.my_recycler_view) RecyclerView rvArticles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +100,17 @@ public class SearchActivity extends AppCompatActivity {
 
                 try {
                     articleJsonResults = response.getJSONArray("results");
-                    adapter.clear();
-                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
-                    adapter.notifyDataSetChanged();
+//                    adapter.clear();
+//                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
+//                    adapter.notifyDataSetChanged();
+                    for (int i = 0; i < articles.size(); i++) {
+                        articles.remove(i);
+                    }
+                    rvAdapter.notifyItemRangeRemoved(0, articles.size());
+
+                    articles.addAll(Article.fromJsonArray(articleJsonResults));
+                    rvAdapter.notifyItemRangeInserted(0, articles.size());
+
                     Log.d("Debug", articles.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -143,7 +156,13 @@ public class SearchActivity extends AppCompatActivity {
 
                 try {
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
-                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
+                    //adapter.addAll(Article.fromJsonArray(articleJsonResults));
+
+
+                    int curSize = rvAdapter.getItemCount();
+                    articles.addAll(Article.fromJsonArray(articleJsonResults));
+                    rvAdapter.notifyItemRangeInserted(curSize, articles.size());
+
                     Log.d("Debug", articles.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -157,15 +176,38 @@ public class SearchActivity extends AppCompatActivity {
         gvResults = (GridView) findViewById(R.id.gvResults);
         //btnSearch = (Button) findViewById(R.id.btnSearch);
         articles = new ArrayList<>();
-        adapter = new ArticleArrayAdapter(this, articles);
-        gvResults.setAdapter(adapter);
+//        adapter = new ArticleArrayAdapter(this, articles);
+//        gvResults.setAdapter(adapter);
         searchFilters = new SearchFilters(beginDate, sortFilter, newsDesk);
 
         // hook up listener for grid click
-        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // create an intent to display the article
+//                Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
+//                // get the article to display
+//                Article article = articles.get(position);
+//                // pass in that article into the intent
+//                i.putExtra("article", article);
+//                // launch the activity
+//                startActivity(i);
+//            }
+//        });
+
+        //rvArticles = (RecyclerView) findViewById(R.id.my_recycler_view);
+//        contacts = Contact.createContactsList(20);
+        rvAdapter = new ArticleAdapter(this, articles);
+        rvArticles.setAdapter(rvAdapter);
+
+        StaggeredGridLayoutManager gridLayoutManager =
+                new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        rvArticles.setLayoutManager(gridLayoutManager);
+//        rvArticles.setLayoutManager(new LinearLayoutManager(this));
+
+        ItemClickSupport.addTo(rvArticles).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // create an intent to display the article
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
                 // get the article to display
                 Article article = articles.get(position);
@@ -210,20 +252,20 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     public void onArticleSearch(String query) {
     // String query = etQuery.getText().toString();
@@ -261,9 +303,17 @@ public class SearchActivity extends AppCompatActivity {
 
                 try {
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
-                    adapter.clear();
-                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
-                    adapter.notifyDataSetChanged();
+//                    adapter.clear();
+//                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
+//                    adapter.notifyDataSetChanged();
+                    for (int i = 0; i < articles.size(); i++) {
+                        articles.remove(i);
+                    }
+                    rvAdapter.notifyItemRangeRemoved(0, articles.size());
+
+                    articles.addAll(Article.fromJsonArray(articleJsonResults));
+                    rvAdapter.notifyItemRangeInserted(0, articles.size());
+
                     Log.d("Debug", articles.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
