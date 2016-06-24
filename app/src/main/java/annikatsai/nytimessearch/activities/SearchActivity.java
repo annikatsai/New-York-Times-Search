@@ -134,7 +134,7 @@ public class SearchActivity extends AppCompatActivity {
 
                     int curSize = rvAdapter.getItemCount();
                     articles.addAll(Article.fromJsonArray(articleJsonResults));
-                    rvAdapter.notifyItemRangeInserted(curSize, articles.size());
+                    rvAdapter.notifyDataSetChanged();
 
                     Log.d("Debug", articles.toString());
                 } catch (JSONException e) {
