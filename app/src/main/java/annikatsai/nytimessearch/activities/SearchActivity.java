@@ -1,6 +1,7 @@
 package annikatsai.nytimessearch.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -50,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.gvResults) GridView gvResults;
-
+    @BindView(R.id.custom_font) TextView toolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,15 @@ public class SearchActivity extends AppCompatActivity {
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Kingthings_Calligraphica_2.ttf");
+
+        toolbarTitle.setTypeface(font);
+
         setUpViews();
         //GridView lvItems = (GridView) findViewById(R.id.gvResults);
 
