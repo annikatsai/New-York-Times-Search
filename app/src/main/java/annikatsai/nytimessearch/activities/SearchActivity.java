@@ -235,9 +235,14 @@ public class SearchActivity extends AppCompatActivity {
         params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
         params.put("page", 0);
         if (filterUsed == true) {
-            params.put("fq", String.format("news_desk:(%s)", searchFilters.getNews_desk()));
-            params.put("begin_date", searchFilters.getBegin_date());
-            params.put("sort", searchFilters.getSort());
+            if (!searchFilters.getNews_desk().isEmpty())
+                params.put("fq", String.format("news_desk:(%s)", searchFilters.getNews_desk()));
+            else
+                params.put("fq", query);
+            if (!searchFilters.getBegin_date().isEmpty())
+                params.put("begin_date", searchFilters.getBegin_date());
+            if (!searchFilters.getSort().isEmpty())
+                params.put("sort", searchFilters.getSort());
         }
         params.put("q", query);
 
@@ -283,39 +288,44 @@ public class SearchActivity extends AppCompatActivity {
             searchFilters = Parcels.unwrap(data.getParcelableExtra("filter"));
 //            searchFilters = (SearchFilters) data.getSerializableExtra("filter");
 
-            AsyncHttpClient client = new AsyncHttpClient();
-            String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+            onArticleSearch(searchQuery);
 
-            RequestParams params = new RequestParams();
-            params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
-            params.put("page", 0);
-            params.put("fq", String.format("news_desk:(%s)", searchFilters.getNews_desk()));
-            params.put("begin_date", searchFilters.getBegin_date());
-            params.put("sort", searchFilters.getSort());
-
-            client.get(url, params, new JsonHttpResponseHandler() {
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    Log.d("Debug", response.toString());
-                    JSONArray articleJsonResults = null;
-
-                    try {
-                        articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
-                        adapter.clear();
-                        adapter.addAll(Article.fromJsonArray(articleJsonResults));
-                        adapter.notifyDataSetChanged();
-                        Log.d("Debug", articles.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+//            AsyncHttpClient client = new AsyncHttpClient();
+//            String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+//
+//            RequestParams params = new RequestParams();
+//            params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
+//            params.put("page", 0);
+//            if (!searchFilters.getNews_desk().isEmpty())
+//                params.put("fq", String.format("news_desk:(%s)", searchFilters.getNews_desk()));
+//            if (!searchFilters.getBegin_date().isEmpty())
+//                params.put("begin_date", searchFilters.getBegin_date());
+//            if (!searchFilters.getSort().isEmpty())
+//                params.put("sort", searchFilters.getSort());
+//
+//            client.get(url, params, new JsonHttpResponseHandler() {
+//
+//                @Override
+//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+//                    super.onFailure(statusCode, headers, throwable, errorResponse);
+//                }
+//
+//                @Override
+//                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                    Log.d("Debug", response.toString());
+//                    JSONArray articleJsonResults = null;
+//
+//                    try {
+//                        articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
+//                        adapter.clear();
+//                        adapter.addAll(Article.fromJsonArray(articleJsonResults));
+//                        adapter.notifyDataSetChanged();
+//                        Log.d("Debug", articles.toString());
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
         }
     }
 }
