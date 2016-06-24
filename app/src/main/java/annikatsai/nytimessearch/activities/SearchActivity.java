@@ -64,50 +64,6 @@ public class SearchActivity extends AppCompatActivity {
         //GridView lvItems = (GridView) findViewById(R.id.gvResults);
 
 //        // Displaying Current Top Stories Before Search
-//        AsyncHttpClient client = new AsyncHttpClient();
-//        String url = "https://api.nytimes.com/svc/topstories/v2/home.json";
-//
-//        RequestParams params = new RequestParams();
-//        params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
-//        params.put("page", 0);
-//
-//        client.get(url, params, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-//                super.onFailure(statusCode, headers, throwable, errorResponse);
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                Log.d("Debug", response.toString());
-//                JSONArray articleJsonResults = null;
-//
-//                try {
-//                    articleJsonResults = response.getJSONArray("results");
-//                    adapter.clear();
-//                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
-//                    adapter.notifyDataSetChanged();
-//                    Log.d("Debug", articles.toString());
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-
-        // Attach the listener to the AdapterView onCreate
-        gvResults.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to your AdapterView
-                customLoadMoreDataFromApi(totalItemsCount);
-                // or customLoadMoreDataFromApi(totalItemsCount);
-                return true; // ONLY if more data is actually being loaded; false otherwise.
-            }
-        });
-
-
-        // Displaying Current Top Stories Before Search
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "https://api.nytimes.com/svc/topstories/v2/home.json";
 
@@ -137,6 +93,19 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Attach the listener to the AdapterView onCreate
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to your AdapterView
+                customLoadMoreDataFromApi(totalItemsCount);
+                // or customLoadMoreDataFromApi(totalItemsCount);
+                return true; // ONLY if more data is actually being loaded; false otherwise.
+            }
+        });
+
     }
 
     // Append more data into the adapter
@@ -247,7 +216,6 @@ public class SearchActivity extends AppCompatActivity {
 
     public void onArticleSearch(String query) {
     // String query = etQuery.getText().toString();
-
     // Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";

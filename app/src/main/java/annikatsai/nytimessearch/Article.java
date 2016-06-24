@@ -26,9 +26,7 @@ public class Article implements Serializable {
     String headline;
     String thumbNail;
 
-
     public Article(JSONObject jsonObject) {
-//        if (this.getHeadline() != null) {
             try {
                 this.webUrl = jsonObject.getString("web_url");
                 this.headline = jsonObject.getJSONObject("headline").getString("main");
@@ -42,21 +40,21 @@ public class Article implements Serializable {
                 }
             } catch (JSONException e) {
             }
-//        } else {
-//            try {
-//                this.webUrl = jsonObject.getString("url");
-//                this.headline = jsonObject.getString("title");
-//
-//                JSONArray multimedia = jsonObject.getJSONArray("multimedia");
-//                if (multimedia.length() > 0) {
-//                    JSONObject multimediaJson = multimedia.getJSONObject(0);
-//                    this.thumbNail = multimediaJson.getString("url");
-//                } else {
-//                    this.thumbNail = "";
-//                }
-//            } catch (JSONException e) {
-//            }
-//        }
+        if (this.getHeadline() == null) {
+            try {
+                this.webUrl = jsonObject.getString("url");
+                this.headline = jsonObject.getString("title");
+
+                JSONArray multimedia = jsonObject.getJSONArray("multimedia");
+                if (multimedia.length() > 0) {
+                    JSONObject multimediaJson = multimedia.getJSONObject(0);
+                    this.thumbNail = multimediaJson.getString("url");
+                } else {
+                    this.thumbNail = "";
+                }
+            } catch (JSONException e) {
+            }
+        }
     }
 
     public static ArrayList<Article> fromJsonArray(JSONArray array) {
