@@ -20,6 +20,7 @@ import java.util.Calendar;
 import annikatsai.nytimessearch.DatePickerFragment;
 import annikatsai.nytimessearch.R;
 import annikatsai.nytimessearch.SearchFilters;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FilterActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
@@ -31,12 +32,15 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     String sort = "";
     int day, month, getYear;
 
+    @BindView(R.id.spinner) Spinner spinner;
+    @BindView(R.id.tvDate) TextView tvDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ButterKnife.bind(this);
+        //Spinner spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sortOrder_array, android.R.layout.simple_spinner_item);
@@ -45,8 +49,6 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        ButterKnife.bind(this);
-
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -72,7 +74,7 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         // store the values selected into a Calendar instance
         // final Calendar c = Calendar.getInstance();
 
-        TextView tvDate = (TextView) findViewById(R.id.tvDate);
+        //TextView tvDate = (TextView) findViewById(R.id.tvDate);
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, monthOfYear);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -84,9 +86,9 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         String date = "" + String.valueOf(month) + "/" + String.valueOf(day)
                 + "/" + String.valueOf(getYear);
         tvDate.setText(date);
-        ButterKnife.bind(this);
     }
 
+//    @OnClick({R.id.cbArts, R.id.cbSports, R.id.cbFashion})
     public void onCheckboxClicked(View view) {
         // Is the view now checked?
         boolean checked = ((CheckBox) view).isChecked();

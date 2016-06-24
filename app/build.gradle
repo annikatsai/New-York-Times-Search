@@ -38,4 +38,9 @@ dependencies {
     //Butterknife
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
+
+    // Scroll to hide toolbar
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:recyclerview-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
 }

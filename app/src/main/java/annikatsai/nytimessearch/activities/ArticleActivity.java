@@ -14,11 +14,12 @@ import android.webkit.WebViewClient;
 
 import annikatsai.nytimessearch.Article;
 import annikatsai.nytimessearch.R;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ArticleActivity extends AppCompatActivity {
 
-//    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 //    @BindView(R.id.wvArticle) WebView webView;
 //    @BindView(R.id.wvArticle) WebView wvArticle;
 
@@ -26,7 +27,7 @@ public class ArticleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Article article = (Article) getIntent().getSerializableExtra("article");
@@ -39,7 +40,6 @@ public class ArticleActivity extends AppCompatActivity {
             }
         });
         webView.loadUrl(article.getWebUrl());
-
         ButterKnife.bind(this);
     }
 
@@ -54,12 +54,12 @@ public class ArticleActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
 
         // get reference to WebView
-        WebView wvArticle = (WebView) findViewById(R.id.wvArticle);
+        WebView webView = (WebView) findViewById(R.id.wvArticle);
         // pass in the URL currently being used by the WebView
-        shareIntent.putExtra(Intent.EXTRA_TEXT, wvArticle.getUrl());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
 
         miShare.setShareIntent(shareIntent);
-//        ButterKnife.bind(this);
+        ButterKnife.bind(this);
         return super.onCreateOptionsMenu(menu);
 
     }

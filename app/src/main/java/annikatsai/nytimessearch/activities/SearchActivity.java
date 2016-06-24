@@ -31,13 +31,15 @@ import annikatsai.nytimessearch.ArticleArrayAdapter;
 import annikatsai.nytimessearch.EndlessScrollListener;
 import annikatsai.nytimessearch.R;
 import annikatsai.nytimessearch.SearchFilters;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE = 50;
     //EditText etQuery;
-    GridView gvResults;
+    //GridView gvResults;
     //Button btnSearch;
     ArrayList<Article> articles;
     ArticleArrayAdapter adapter;
@@ -46,17 +48,22 @@ public class SearchActivity extends AppCompatActivity {
     SearchFilters searchFilters;
     Boolean filterUsed = false;
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.gvResults) GridView gvResults;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setUpViews();
+        //GridView lvItems = (GridView) findViewById(R.id.gvResults);
 
-        GridView lvItems = (GridView) findViewById(R.id.gvResults);
-
-        // Displaying Current Top Stories Before Search
+//        // Displaying Current Top Stories Before Search
 //        AsyncHttpClient client = new AsyncHttpClient();
 //        String url = "https://api.nytimes.com/svc/topstories/v2/home.json";
 //
@@ -65,7 +72,6 @@ public class SearchActivity extends AppCompatActivity {
 //        params.put("page", 0);
 //
 //        client.get(url, params, new JsonHttpResponseHandler() {
-//
 //            @Override
 //            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
 //                super.onFailure(statusCode, headers, throwable, errorResponse);
@@ -87,8 +93,9 @@ public class SearchActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
+
         // Attach the listener to the AdapterView onCreate
-        lvItems.setOnScrollListener(new EndlessScrollListener() {
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
@@ -96,6 +103,38 @@ public class SearchActivity extends AppCompatActivity {
                 customLoadMoreDataFromApi(totalItemsCount);
                 // or customLoadMoreDataFromApi(totalItemsCount);
                 return true; // ONLY if more data is actually being loaded; false otherwise.
+            }
+        });
+
+
+        // Displaying Current Top Stories Before Search
+        AsyncHttpClient client = new AsyncHttpClient();
+        String url = "https://api.nytimes.com/svc/topstories/v2/home.json";
+
+        RequestParams params = new RequestParams();
+        params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
+        params.put("page", 0);
+
+        client.get(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("Debug", response.toString());
+                JSONArray articleJsonResults = null;
+
+                try {
+                    articleJsonResults = response.getJSONArray("results");
+                    adapter.clear();
+                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
+                    adapter.notifyDataSetChanged();
+                    Log.d("Debug", articles.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -156,6 +195,7 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
     }
 
     @Override
@@ -250,6 +290,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+//    @OnClick(R.id.action_filter)
     public void launchFilterView(MenuItem item) {
         Intent i = new Intent(SearchActivity.this, FilterActivity.class);
         i.putExtra("filter", Parcels.wrap(searchFilters));
