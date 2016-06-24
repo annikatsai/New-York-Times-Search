@@ -31,7 +31,6 @@ import java.util.ArrayList;
 
 import annikatsai.nytimessearch.Article;
 import annikatsai.nytimessearch.ArticleAdapter;
-import annikatsai.nytimessearch.ArticleArrayAdapter;
 import annikatsai.nytimessearch.EndlessRecyclerViewScrollListener;
 import annikatsai.nytimessearch.ItemClickSupport;
 import annikatsai.nytimessearch.R;
@@ -43,11 +42,7 @@ import cz.msebera.android.httpclient.Header;
 public class SearchActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE = 50;
-    //EditText etQuery;
-    //GridView gvResults;
-    //Button btnSearch;
     ArrayList<Article> articles;
-    ArticleArrayAdapter adapter;
     ArticleAdapter rvAdapter;
     String searchQuery;
     String beginDate = "", sortFilter = "", newsDesk = "";
@@ -65,7 +60,6 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -77,7 +71,6 @@ public class SearchActivity extends AppCompatActivity {
         toolbarTitle.setTypeface(font);
 
         setUpViews();
-        //GridView lvItems = (GridView) findViewById(R.id.gvResults);
 
 //        // Displaying Current Top Stories Before Search
         AsyncHttpClient client = new AsyncHttpClient();
@@ -100,9 +93,6 @@ public class SearchActivity extends AppCompatActivity {
 
                 try {
                     articleJsonResults = response.getJSONArray("results");
-//                    adapter.clear();
-//                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
-//                    adapter.notifyDataSetChanged();
                     for (int i = 0; i < articles.size(); i++) {
                         articles.remove(i);
                     }
@@ -118,28 +108,12 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        // Attach the listener to the AdapterView onCreate
-//        gvResults.setOnScrollListener(new EndlessScrollListener() {
-//            @Override
-//            public boolean onLoadMore(int page, int totalItemsCount) {
-//                // Triggered only when new data needs to be appended to the list
-//                // Add whatever code is needed to append new items to your AdapterView
-//                customLoadMoreDataFromApi(totalItemsCount);
-//                // or customLoadMoreDataFromApi(totalItemsCount);
-//                return true; // ONLY if more data is actually being loaded; false otherwise.
-//            }
-//        });
 
     }
 
     // Append more data into the adapter
     public void customLoadMoreDataFromApi(int offset) {
-        // This method probably sends out a network request and appends new data items to your adapter.
-        // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
-        // Deserialize API response and then construct new objects to append to the adapter
-        //String query = etQuery.getText().toString();
 
-        //Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
 
@@ -171,38 +145,16 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setUpViews() {
-        //etQuery = (EditText) findViewById(R.id.etQuery);
         gvResults = (GridView) findViewById(R.id.gvResults);
-        //btnSearch = (Button) findViewById(R.id.btnSearch);
         articles = new ArrayList<>();
-//        adapter = new ArticleArrayAdapter(this, articles);
-//        gvResults.setAdapter(adapter);
         searchFilters = new SearchFilters(beginDate, sortFilter, newsDesk);
 
-        // hook up listener for grid click
-//        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // create an intent to display the article
-//                Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
-//                // get the article to display
-//                Article article = articles.get(position);
-//                // pass in that article into the intent
-//                i.putExtra("article", article);
-//                // launch the activity
-//                startActivity(i);
-//            }
-//        });
-
-        //rvArticles = (RecyclerView) findViewById(R.id.my_recycler_view);
-//        contacts = Contact.createContactsList(20);
         rvAdapter = new ArticleAdapter(this, articles);
         rvArticles.setAdapter(rvAdapter);
 
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         rvArticles.setLayoutManager(gridLayoutManager);
-//        rvArticles.setLayoutManager(new LinearLayoutManager(this));
 
         rvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
@@ -230,9 +182,6 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_search, menu);
-//        return true;
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_search, menu);
@@ -260,24 +209,8 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     public void onArticleSearch(String query) {
-    // String query = etQuery.getText().toString();
-    // Toast.makeText(this, "Searching for " + query, Toast.LENGTH_SHORT).show();
+
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
 
@@ -342,46 +275,7 @@ public class SearchActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             searchFilters = Parcels.unwrap(data.getParcelableExtra("filter"));
-//            searchFilters = (SearchFilters) data.getSerializableExtra("filter");
-
             onArticleSearch(searchQuery);
-
-//            AsyncHttpClient client = new AsyncHttpClient();
-//            String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
-//
-//            RequestParams params = new RequestParams();
-//            params.put("api-key", "3c92f112cd9f4553b556f691624b70af");
-//            params.put("page", 0);
-//            if (!searchFilters.getNews_desk().isEmpty())
-//                params.put("fq", String.format("news_desk:(%s)", searchFilters.getNews_desk()));
-//            if (!searchFilters.getBegin_date().isEmpty())
-//                params.put("begin_date", searchFilters.getBegin_date());
-//            if (!searchFilters.getSort().isEmpty())
-//                params.put("sort", searchFilters.getSort());
-//
-//            client.get(url, params, new JsonHttpResponseHandler() {
-//
-//                @Override
-//                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-//                    super.onFailure(statusCode, headers, throwable, errorResponse);
-//                }
-//
-//                @Override
-//                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                    Log.d("Debug", response.toString());
-//                    JSONArray articleJsonResults = null;
-//
-//                    try {
-//                        articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
-//                        adapter.clear();
-//                        adapter.addAll(Article.fromJsonArray(articleJsonResults));
-//                        adapter.notifyDataSetChanged();
-//                        Log.d("Debug", articles.toString());
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
         }
     }
 }

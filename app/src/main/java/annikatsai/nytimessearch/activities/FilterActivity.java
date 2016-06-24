@@ -41,8 +41,6 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         setContentView(R.layout.activity_filter);
         ButterKnife.bind(this);
 
-        //Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sortOrder_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
@@ -73,9 +71,6 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         // store the values selected into a Calendar instance
-        // final Calendar c = Calendar.getInstance();
-
-        //TextView tvDate = (TextView) findViewById(R.id.tvDate);
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, monthOfYear);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -89,13 +84,9 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         tvDate.setText(date);
     }
 
-//    @OnClick({R.id.cbArts, R.id.cbSports, R.id.cbFashion})
     public void onCheckboxClicked(View view) {
-        // Is the view now checked?
+
         boolean checked = ((CheckBox) view).isChecked();
-//        String queryArts;
-//        String queryFashion;
-//        String querySports;
 
         // Check which checkbox was clicked
         switch(view.getId()) {

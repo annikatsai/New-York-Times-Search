@@ -21,5 +21,6 @@
         android:textColor="#000000"
         android:maxWidth="100dp"
         android:typeface="serif"
-        android:autoText="false" />
+        android:autoText="false"
+        android:gravity="center" />
 </LinearLayout>

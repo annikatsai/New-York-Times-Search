@@ -21,18 +21,17 @@ public class ArticleActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.wvArticle) WebView webView;
-//    @BindView(R.id.wvArticle) WebView wvArticle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
         ButterKnife.bind(this);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
 
         Article article = (Article) getIntent().getSerializableExtra("article");
-        //WebView webView = (WebView) findViewById(R.id.wvArticle);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -54,9 +53,6 @@ public class ArticleActivity extends AppCompatActivity {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
 
-        // get reference to WebView
-        //WebView webView = (WebView) findViewById(R.id.wvArticle);
-        // pass in the URL currently being used by the WebView
         shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
 
         miShare.setShareIntent(shareIntent);
