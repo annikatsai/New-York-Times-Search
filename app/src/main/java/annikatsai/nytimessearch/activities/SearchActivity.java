@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import annikatsai.nytimessearch.Article;
 import annikatsai.nytimessearch.ArticleAdapter;
 import annikatsai.nytimessearch.ArticleArrayAdapter;
-import annikatsai.nytimessearch.EndlessScrollListener;
+import annikatsai.nytimessearch.EndlessRecyclerViewScrollListener;
 import annikatsai.nytimessearch.ItemClickSupport;
 import annikatsai.nytimessearch.R;
 import annikatsai.nytimessearch.SearchFilters;
@@ -119,16 +119,16 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         // Attach the listener to the AdapterView onCreate
-        gvResults.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                // Triggered only when new data needs to be appended to the list
-                // Add whatever code is needed to append new items to your AdapterView
-                customLoadMoreDataFromApi(totalItemsCount);
-                // or customLoadMoreDataFromApi(totalItemsCount);
-                return true; // ONLY if more data is actually being loaded; false otherwise.
-            }
-        });
+//        gvResults.setOnScrollListener(new EndlessScrollListener() {
+//            @Override
+//            public boolean onLoadMore(int page, int totalItemsCount) {
+//                // Triggered only when new data needs to be appended to the list
+//                // Add whatever code is needed to append new items to your AdapterView
+//                customLoadMoreDataFromApi(totalItemsCount);
+//                // or customLoadMoreDataFromApi(totalItemsCount);
+//                return true; // ONLY if more data is actually being loaded; false otherwise.
+//            }
+//        });
 
     }
 
@@ -157,7 +157,6 @@ public class SearchActivity extends AppCompatActivity {
                 try {
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
                     //adapter.addAll(Article.fromJsonArray(articleJsonResults));
-
 
                     int curSize = rvAdapter.getItemCount();
                     articles.addAll(Article.fromJsonArray(articleJsonResults));
@@ -204,6 +203,15 @@ public class SearchActivity extends AppCompatActivity {
                 new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         rvArticles.setLayoutManager(gridLayoutManager);
 //        rvArticles.setLayoutManager(new LinearLayoutManager(this));
+
+        rvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                customLoadMoreDataFromApi(page);
+            }
+        });
 
         ItemClickSupport.addTo(rvArticles).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -306,13 +314,11 @@ public class SearchActivity extends AppCompatActivity {
 //                    adapter.clear();
 //                    adapter.addAll(Article.fromJsonArray(articleJsonResults));
 //                    adapter.notifyDataSetChanged();
-                    for (int i = 0; i < articles.size(); i++) {
-                        articles.remove(i);
-                    }
-                    rvAdapter.notifyItemRangeRemoved(0, articles.size());
-
+                    articles.clear();
+                    //rvAdapter.notifyItemRangeRemoved(0, articles.size());
                     articles.addAll(Article.fromJsonArray(articleJsonResults));
-                    rvAdapter.notifyItemRangeInserted(0, articles.size());
+                    //rvAdapter.notifyItemRangeInserted(0, articles.size());
+                    rvAdapter.notifyDataSetChanged();
 
                     Log.d("Debug", articles.toString());
                 } catch (JSONException e) {
